@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using ShopProfessionalWebsite.Data;
 using ShopProfessionalWebsite.Models;
+using ShopProfessionalWebsite.Services;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -41,6 +42,9 @@ builder.Services.AddSession(options =>
     options.Cookie.HttpOnly = true;
     options.Cookie.IsEssential = true;
 });
+
+// Register Custom Services for Dependency Injection
+builder.Services.AddScoped<IProductService, ShopProfessionalWebsite.Services.ProductService>();
 
 // AutoMapper
 builder.Services.AddAutoMapper(typeof(Program));
