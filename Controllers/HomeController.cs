@@ -8,11 +8,13 @@ namespace ShopProfessionalWebsite.Controllers
     public class HomeController : Controller
     {
         private readonly IProductService _productService;
+        private readonly IShoppingCartService _cartService;
         private readonly ILogger<HomeController> _logger;
 
-        public HomeController(IProductService productService, ILogger<HomeController> logger)
+        public HomeController(IProductService productService, IShoppingCartService cartService, ILogger<HomeController> logger)
         {
             _productService = productService;
+            _cartService = cartService;
             _logger = logger;
         }
 
@@ -25,6 +27,7 @@ namespace ShopProfessionalWebsite.Controllers
                 Bestsellers = await _productService.GetBestsellersAsync(8),
                 Brands = await _productService.GetBrandsAsync(6)
             };
+            ViewBag.CartItemCount = await _cartService.GetCartItemCountAsync();
             return View(viewModel);
         }
 

@@ -7,11 +7,13 @@ namespace ShopProfessionalWebsite.Controllers
     public class ProductsController : Controller
     {
         private readonly IProductService _productService;
+        private readonly IShoppingCartService _cartService;
 
         // Injecting the Product Service through the constructor
-        public ProductsController(IProductService productService)
+        public ProductsController(IProductService productService, IShoppingCartService cartService)
         {
             _productService = productService;
+            _cartService = cartService;
         }
 
         /// <summary>
@@ -40,7 +42,7 @@ namespace ShopProfessionalWebsite.Controllers
 
             // Calling the service to handle the filtering logic
             var result = await _productService.GetProductsAsync(filter);
-
+            ViewBag.CartItemCount =await _cartService.GetCartItemCountAsync();
             return View(result);
         }
 
@@ -68,7 +70,7 @@ namespace ShopProfessionalWebsite.Controllers
                 RelatedProducts = relatedProducts,
                 IsInWishlist = isInWishlist
             };
-
+            ViewBag.CartItemCount = await _cartService.GetCartItemCountAsync();
             return View(viewModel);
         }
     }

@@ -11,9 +11,6 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
-//  Add HttpContextAccessor to access Session inside the Service layer
-builder.Services.AddHttpContextAccessor();
-
 // 2.Enable Session State Services
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession(options =>
@@ -54,6 +51,9 @@ builder.Services.AddAuthorization(options =>
     options.AddPolicy("CustomerOnly", policy => policy.RequireRole("Customer"));
 });
 
+//  Add HttpContextAccessor to access Session inside the Service layer
+builder.Services.AddHttpContextAccessor();
+
 // Session & Shopping Cart
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession(options =>
@@ -65,6 +65,7 @@ builder.Services.AddSession(options =>
 
 // Register Custom Services for Dependency Injection
 builder.Services.AddScoped<IProductService, ShopProfessionalWebsite.Services.ProductService>();
+builder.Services.AddScoped<IShoppingCartService, ShopProfessionalWebsite.Services.ShoppingCartService>();
 
 // AutoMapper
 builder.Services.AddAutoMapper(typeof(Program));
