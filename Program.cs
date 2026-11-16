@@ -3,12 +3,32 @@ using Microsoft.EntityFrameworkCore;
 using ShopProfessionalWebsite.Data;
 using ShopProfessionalWebsite.Models;
 using ShopProfessionalWebsite.Services;
+using Stripe;
 
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+//  Add HttpContextAccessor to access Session inside the Service layer
+builder.Services.AddHttpContextAccessor();
+
+// 2.Enable Session State Services
+builder.Services.AddDistributedMemoryCache();
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(30); // Cart expires after 30 mins of inactivity
+   // options.HttpOnly = true;                        // Security: Prevents XSS attacks from reading session cookie
+    //options.IsEssential = true;                     // Essential for cart functionality to bypass GDPR cookie consent
+});
+
+// Stripe Configuration
+builder.Services.Configure<StripeSettings>(builder.Configuration.GetSection("Stripe"));
+
+// 3. Register Custom Application Services
+builder.Services.AddScoped<IShoppingCartService, ShopProfessionalWebsite.Services.ShoppingCartService>();
+
 
 // Database Context
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
@@ -64,6 +84,7 @@ app.UseStaticFiles();
 app.UseRouting();
 app.UseSession();
 
+StripeConfiguration.ApiKey = builder.Configuration["Stripe:SecretKey"];
 app.UseAuthentication();
 app.UseAuthorization();
 
