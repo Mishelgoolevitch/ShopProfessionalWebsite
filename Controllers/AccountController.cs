@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using ShopProfessionalWebsite.Data;
 using ShopProfessionalWebsite.Models;
 using ShopProfessionalWebsite.Services;
+using ShopProfessionalWebsite.ViewModels;
 using Stripe;
 
 namespace ShopProfessionalWebsite.Controllers
@@ -38,6 +39,44 @@ namespace ShopProfessionalWebsite.Controllers
 
             // 2. Rendering the onboarding interface
             return View();
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Register(RegisterViewModel model, string? returnUrl = null)
+        {
+            ViewData["ReturnUrl"] = returnUrl;
+
+            if (!ModelState.IsValid)
+                return View(model);
+
+            var user = new ApplicationUser
+            {
+                UserName = model.Email,
+                Email = model.Email,
+                FirstName = model.FirstName,
+                LastName = model.LastName,
+                PhoneNumber = model.PhoneNumber,
+                EmailConfirmed = true
+            };
+
+            var result = await _userManager.CreateAsync(user, model.Password);
+
+            if (result.Succeeded)
+            {
+                await _userManager.AddToRoleAsync(user, "Customer");
+
+                await _signInManager.SignInAsync(user, isPersistent: false);
+                return RedirectToAction("Index", "Home");
+            }
+
+            foreach (var error in result.Errors)
+            {
+                ModelState.AddModelError(string.Empty, error.Description);
+            }
+
+            return View(model);
         }
     }
 }
