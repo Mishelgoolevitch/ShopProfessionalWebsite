@@ -63,5 +63,7 @@
                 _logger.LogInformation($"File deleted: {fullPath}");
             }
         }
+
+
     }
 }

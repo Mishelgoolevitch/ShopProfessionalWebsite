@@ -22,7 +22,7 @@ namespace ShopProfessionalWebsite.Controllers
            SignInManager<ApplicationUser> signInManager,
            RoleManager<IdentityRole> roleManager,
            ApplicationDbContext context,  // ADD THIS PARAMETER)
-           IShoppingCartService cartService, IFileService fileService)
+           IShoppingCartService cartService)
         {
             _userManager = userManager;
             _signInManager = signInManager;
@@ -77,6 +77,14 @@ namespace ShopProfessionalWebsite.Controllers
             }
 
             return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Logout()
+        {
+            await _signInManager.SignOutAsync();
+            return RedirectToAction("Index", "Home");
         }
     }
 }
