@@ -272,5 +272,15 @@ namespace ShopProfessionalWebsite.Controllers
 
             return View(model);
         }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public IActionResult ResetPassword(string? code = null)
+        {
+            if (code == null)
+                return BadRequest("A code must be supplied for password reset.");
+
+            return View();
+        }
     }
 }
