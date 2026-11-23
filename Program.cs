@@ -66,6 +66,7 @@ builder.Services.AddSession(options =>
 // Register Custom Services for Dependency Injection
 builder.Services.AddScoped<IProductService, ShopProfessionalWebsite.Services.ProductService>();
 builder.Services.AddScoped<IShoppingCartService, ShopProfessionalWebsite.Services.ShoppingCartService>();
+builder.Services.AddScoped<IFileService, ShopProfessionalWebsite.Services.FileService>();
 
 // AutoMapper
 builder.Services.AddAutoMapper(typeof(Program));
