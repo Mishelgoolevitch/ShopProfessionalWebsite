@@ -39,4 +39,15 @@
         }
     });
 
+    // Wishlist functionality
+    window.addToWishlist = function (productId) {
+        $.post('/Account/AddToWishlist', { productId: productId }, function (data) {
+            if (data.success) {
+                showToast(data.message, 'success');
+            }
+        }).fail(function () {
+            window.location.href = '/Account/Login';
+        });
+    };
+
 });
